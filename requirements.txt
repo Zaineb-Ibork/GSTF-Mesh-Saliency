@@ -1,0 +1,10 @@
+numpy
+scipy
+scikit-learn
+matplotlib
+trimesh
+open3d
+gudhi
+torch
+# Optional: only needed for the graph-network baselines/experiments
+# torch-geometric

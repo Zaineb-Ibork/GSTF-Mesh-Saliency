@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSTF — Graph-Structural and Topological Features for 3D Mesh Saliency</title>
+<style>
+  :root { --navy:#1f3a5f; --accent:#2a6fb0; --grey:#555; --bg:#fff; --soft:#f3f6fa; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+         color:#1a1a1a; line-height:1.6; background:var(--bg); }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  header { background:linear-gradient(135deg,#1f3a5f,#2a6fb0); color:#fff;
+           padding:48px 0 40px; text-align:center; }
+  header h1 { margin:0 0 6px; font-size:1.9rem; line-height:1.25; }
+  header .venue { font-size:1rem; opacity:.9; margin:14px 0 4px; }
+  .authors { font-size:1.05rem; margin:10px 0 2px; }
+  .affil { font-size:.9rem; opacity:.85; }
+  .links { margin-top:22px; }
+  .links a { display:inline-block; margin:6px; padding:9px 18px; border-radius:6px;
+             background:rgba(255,255,255,.15); color:#fff; text-decoration:none;
+             font-weight:600; border:1px solid rgba(255,255,255,.35); }
+  .links a:hover { background:rgba(255,255,255,.28); }
+  section { padding:30px 0; border-bottom:1px solid #eee; }
+  h2 { color:var(--navy); font-size:1.35rem; margin:0 0 12px; }
+  .teaser img { width:100%; border:1px solid #e3e3e3; border-radius:8px; }
+  .caption { font-size:.85rem; color:var(--grey); margin-top:8px; }
+  .cards { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
+  .card { flex:1 1 240px; background:var(--soft); border-radius:8px; padding:16px 18px; }
+  .card h3 { margin:0 0 6px; color:var(--accent); font-size:1.05rem; }
+  .card p { margin:0; font-size:.93rem; }
+  table { border-collapse:collapse; width:100%; margin-top:6px; font-size:.95rem; }
+  th,td { text-align:left; padding:7px 10px; border-bottom:1px solid #e6e6e6; }
+  th { color:var(--navy); }
+  .hi { background:#d9f0d9; font-weight:700; }
+  pre { background:#0f1b2d; color:#e6edf3; padding:16px; border-radius:8px;
+        overflow-x:auto; font-size:.85rem; }
+  footer { padding:26px 0 40px; color:var(--grey); font-size:.85rem; text-align:center; }
+  a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Graph-Structural and Topological Features<br>for 3D Mesh Saliency</h1>
+    <div class="authors">Zaineb Ibork &nbsp;·&nbsp; Akihiro Sugimoto</div>
+    <div class="affil">National Institute of Informatics, Tokyo, Japan</div>
+    <div class="venue">S+SSPR 2026</div>
+    <div class="links">
+      <a href="#">Paper (PDF)</a>
+      <a href="https://github.com/Zaineb-Ibork/GSTF-Mesh-Saliency">Code</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="teaser">
+    <img src="fig_qualitative.png" alt="Qualitative saliency predictions across categories">
+    <div class="caption">Ground-truth saliency (left) vs. our full model's prediction
+      (right) across five Schelling categories. Predictions recover salient
+      protrusions (fingertips, fins, leg tips) across diverse object types.</div>
+  </section>
+
+  <section>
+    <h2>Abstract</h2>
+    <p>Mesh saliency predicts which vertices of a 3D surface attract human attention.
+    Its core difficulty is that perceptual importance is inherently non-local, yet
+    almost all existing methods rely on purely local differential descriptors and so
+    miss where a point sits within the global shape. We identify three structural
+    properties that current predictors systematically ignore: <b>bilateral symmetry</b>,
+    <b>contextual rank</b>, and <b>topological persistence</b>. All three are
+    learning-free and complement any local descriptor. Added to a strong multi-scale
+    spiral-patch baseline on the Schelling dataset, our descriptor
+    <b>GSTF</b> achieves the highest PLCC among published methods and an AUC
+    competitive with the best. The gain survives a strict held-out-mesh test that
+    prevents vertex-level leakage, and contextual rank provably carries no direct
+    ground-truth signal.</p>
+  </section>
+
+  <section>
+    <h2>Three learning-free feature families</h2>
+    <div class="cards">
+      <div class="card"><h3>Symmetry (SymF)</h3>
+        <p>Spiral-patch distance to a vertex's bilateral mirror, weighted by a global
+        symmetry-confidence term.</p></div>
+      <div class="card"><h3>Contextual rank (CR)</h3>
+        <p>Per-mesh empirical CDF of each base feature — a mesh-global sense of how a
+        vertex ranks.</p></div>
+      <div class="card"><h3>Persistence (Pers)</h3>
+        <p>Persistence of each vertex under a curvature filtration, capturing
+        topologically significant extrema.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Results (Schelling, pooled protocol)</h2>
+    <table>
+      <tr><th>Model</th><th>PLCC</th><th>AUC</th></tr>
+      <tr><td>Spiral Regressor (baseline)</td><td>0.557</td><td>0.820</td></tr>
+      <tr class="hi"><td>GSTF (ours, full 24-D)</td><td>0.680</td><td>0.873</td></tr>
+    </table>
+    <div class="caption">Highest PLCC among compared methods; gain confirmed
+      significant under 10-fold cross-validation and a leakage-free held-out-mesh test.</div>
+  </section>
+
+  <section id="bibtex">
+    <h2>Citation</h2>
+<pre>@inproceedings{ibork2026gstf,
+  title     = {Graph-Structural and Topological Features for 3D Mesh Saliency},
+  author    = {Ibork, Zaineb and Sugimoto, Akihiro},
+  booktitle = {Structural, Syntactic, and Statistical Pattern Recognition (S+SSPR)},
+  year      = {2026}
+}</pre>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">Code released under the MIT License. The Schelling and SAL3D
+  datasets belong to their respective authors and are not redistributed here.</div>
+</footer>
+</body>
+</html>

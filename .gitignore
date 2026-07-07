@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Datasets (third-party — not redistributed; see README)
+data/
+SchellingData/
+SAL3D/
+sal3d_data*/
+decimated_data/
+
+# Precomputed feature caches (regenerate with precompute*.py)
+cache/
+cache_*/
+
+# Run outputs / logs / results
+*.log
+*.npy
+*.pkl
+results/
+outputs/
+
+# Large / generated artifacts
+*.zip
+*.pdf
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
