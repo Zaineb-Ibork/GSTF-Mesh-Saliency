@@ -1,4 +1,4 @@
-# GSTF — Graph-Structural and Topological Features for 3D Mesh Saliency
+# GSTF : Graph-Structural and Topological Features for 3D Mesh Saliency
 
 Code for the paper **“Graph-Structural and Topological Features for 3D Mesh
 Saliency”** (Zaineb Ibork and Akihiro Sugimoto, National Institute of Informatics,
