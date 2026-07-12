@@ -9,15 +9,15 @@ methods use purely local, differential descriptors and miss where a point sits w
 the global shape. **GSTF** adds three *learning-free* feature families on top of a
 multi-scale spiral-patch descriptor:
 
-- **Symmetry consistency (SymF)** — distance between a vertex's spiral patch and that of
+- **Symmetry consistency (SymF)** : distance between a vertex's spiral patch and that of
   its bilateral mirror, weighted by a global symmetry-confidence term.
-- **Contextual rank (CR)** — the per-mesh empirical CDF of each base feature, giving the
+- **Contextual rank (CR)** : the per-mesh empirical CDF of each base feature, giving the
   model a mesh-global sense of how a vertex ranks.
-- **Topological persistence (Pers)** — the persistence of each vertex under a curvature
+- **Topological persistence (Pers)** : the persistence of each vertex under a curvature
   filtration, capturing topologically significant extrema regardless of local magnitude.
 
 On the Schelling benchmark, GSTF raises PLCC from **0.540 → 0.680** and AUC from
-**0.818 → 0.873** over the spiral-patch baseline — the highest PLCC among compared
+**0.818 → 0.873** over the spiral-patch baseline ; the highest PLCC among compared
 methods — and the gain survives a strict, leakage-free held-out-mesh test.
 
 📄 Project page: `https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/`
