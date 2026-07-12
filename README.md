@@ -20,7 +20,7 @@ On the Schelling benchmark, GSTF raises PLCC from **0.540 → 0.680** and AUC fr
 **0.818 → 0.873** over the spiral-patch baseline ; the highest PLCC among compared
 methods — and the gain survives a strict, leakage-free held-out-mesh test.
 
-📄 Project page: `https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/`
+📄 **Project page:** https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/
 
 ## Repository layout
 
