@@ -1,44 +1,46 @@
-# GSTF — Graph-Structural and Topological Features for 3D Mesh Saliency
+# GSTF: Graph-Structural and Topological Features for 3D Mesh Saliency
 
-Code for the paper **“Graph-Structural and Topological Features for 3D Mesh
-Saliency”** (Zaineb Ibork and Akihiro Sugimoto, National Institute of Informatics,
-Tokyo), *S+SSPR 2026*.
+This is the code for our S+SSPR 2026 paper, **"Graph-Structural and Topological
+Features for 3D Mesh Saliency"**, by Zaineb Ibork and Akihiro Sugimoto (National
+Institute of Informatics, Tokyo).
 
-Mesh saliency predicts which vertices of a 3D surface attract human attention. Most
-methods use purely local, differential descriptors and miss where a point sits within
-the global shape. **GSTF** adds three *learning-free* feature families on top of a
-multi-scale spiral-patch descriptor:
+Mesh saliency is about predicting which parts of a 3D surface people look at. Most
+methods describe each vertex with local, differential features, so they can't tell
+where a point sits in the shape as a whole. GSTF adds three feature families on top of
+a multi-scale spiral-patch descriptor. None of them needs training:
 
-- **Symmetry consistency (SymF)** — distance between a vertex's spiral patch and that of
-  its bilateral mirror, weighted by a global symmetry-confidence term.
-- **Contextual rank (CR)** — the per-mesh empirical CDF of each base feature, giving the
-  model a mesh-global sense of how a vertex ranks.
-- **Topological persistence (Pers)** — the persistence of each vertex under a curvature
-  filtration, capturing topologically significant extrema regardless of local magnitude.
+- **Symmetry consistency (SymF):** how much a vertex's spiral patch differs from the
+  patch of its mirror vertex, weighted by how symmetric the whole mesh is.
+- **Contextual rank (CR):** where each base feature of a vertex ranks within its own
+  mesh (the per-mesh empirical CDF).
+- **Topological persistence (Pers):** how long each curvature extremum survives in a
+  persistence filtration, so that strong extrema stand out even when the curvature
+  itself is small.
 
-On the Schelling benchmark, GSTF raises PLCC from **0.540 → 0.680** and AUC from
-**0.818 → 0.873** over the spiral-patch baseline — the highest PLCC among compared
-methods — and the gain survives a strict, leakage-free held-out-mesh test.
+On the Schelling benchmark, GSTF raises PLCC from **0.540 to 0.680** and AUC from
+**0.818 to 0.873** over the spiral-patch baseline. That is the highest PLCC among the
+methods we compared, and the gain holds up when whole meshes are held out of training.
 
-📄 **Project page:** https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/
+**Project page:** https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/
 
-This repository holds the code of the **conference paper** (S+SSPR 2026).
+The code in this repository reproduces the **conference paper**.
 
 ## Journal extension (under revision, coming soon)
 
-An extended version of this work is under revision for a journal. It adds:
+We have extended this work into a journal paper, which is now under revision. In it we:
 
-- evaluation under six named protocols: unseen meshes, unseen categories, training per
-  category, decimated meshes, and the published split of a learned graph network, with
-  paired statistical tests and error measures (MSE, MAE) next to correlation;
-- tests that replace each feature by a simpler signal, to explain where each gain comes from;
-- a comparison with a learned graph neural network on its own test meshes, and the same
-  network trained with our features as input;
-- a refined symmetry feature and plane estimation, a faithful re-implementation of the
-  spiral-patch baseline, a cross-database test on eye-tracking data (SAL3D), and the
-  measured cost on new meshes.
+- evaluate the features under six named protocols (unseen meshes, unseen categories,
+  training per category, decimated meshes, and the published split of a learned graph
+  network), with paired statistical tests and error measures (MSE, MAE) as well as
+  correlation;
+- replace each feature with a simpler signal to find out where its gain comes from;
+- compare with a learned graph neural network on its own test meshes, and also train
+  that network with our features as input;
+- refine the symmetry feature and the symmetry-plane estimation, re-implement the
+  spiral-patch baseline exactly as published, test transfer to eye-tracking data
+  (SAL3D), and measure the cost of processing a new mesh.
 
-The paper and the code of the extension will be released here after publication.
+We'll release the paper and its code here once it is published.
 
 ## Repository layout
 
@@ -64,15 +66,15 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Tested with Python 3.12. `gudhi` provides the persistent-homology backend;
-`torch-geometric` is only needed for the optional graph-network baselines (commented
-out in `requirements.txt`).
+We tested it with Python 3.12. `gudhi` computes the persistent homology.
+`torch-geometric` is only needed for the optional graph-network baselines, so it is
+commented out in `requirements.txt`.
 
 ## Dataset
 
-This repository contains **code only**. The experiments use the third-party
-**Schelling** dataset (Chen et al., *Schelling points on 3D surface meshes*, SIGGRAPH
-2012), obtainable from the original authors. The loader expects the standard layout:
+This repository contains **code only**. The experiments use the **Schelling** dataset
+(Chen et al., *Schelling points on 3D surface meshes*, SIGGRAPH 2012), which you can get
+from its authors. The loader expects this layout:
 
 ```
 SchellingData/
@@ -81,14 +83,14 @@ SchellingData/
   Points/         # discrete Schelling points
 ```
 
-Point the code at your copy via an environment variable:
+Then tell the code where your copy is:
 
 ```bash
 export SCHELLING_ROOT=/path/to/SchellingData
 ```
 
-The cross-dataset scripts (`run_crossdb*.py`, `prepare_sal3d*.py`) additionally use
-the **SAL3D** dataset, obtainable from its authors.
+The cross-dataset scripts (`run_crossdb*.py`, `prepare_sal3d*.py`) also need the
+**SAL3D** dataset, which is likewise available from its authors.
 
 ## Usage
 
@@ -110,13 +112,13 @@ python eval_per_category.py
 # 5. Statistical significance (Wilcoxon / paired-t, Holm-corrected)
 python compute_significance.py
 
-# 6. Reproduce paper figures/tables
+# 6. Reproduce the figures and tables of the paper
 python make_figures.py
 python make_sota_comparison_figure.py
 ```
 
-All hyperparameters (γ, ring depth, scales, seed, MLP widths) are in `config.py` and
-match the paper.
+All hyperparameters (γ, ring depth, scales, seed, MLP widths) live in `config.py`
+and are the ones used in the paper.
 
 ## Citation
 
@@ -131,5 +133,6 @@ match the paper.
 
 ## License
 
-Released under the [MIT License](LICENSE). The Schelling and SAL3D datasets are the
-property of their respective authors and are **not** included or redistributed here.
+The code is released under the [MIT License](LICENSE). The Schelling and SAL3D
+datasets belong to their authors; they are **not** included here and we do not
+redistribute them.
