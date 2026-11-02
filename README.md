@@ -1,4 +1,4 @@
-# GSTF : Graph-Structural and Topological Features for 3D Mesh Saliency
+# GSTF — Graph-Structural and Topological Features for 3D Mesh Saliency
 
 Code for the paper **“Graph-Structural and Topological Features for 3D Mesh
 Saliency”** (Zaineb Ibork and Akihiro Sugimoto, National Institute of Informatics,
@@ -9,18 +9,36 @@ methods use purely local, differential descriptors and miss where a point sits w
 the global shape. **GSTF** adds three *learning-free* feature families on top of a
 multi-scale spiral-patch descriptor:
 
-- **Symmetry consistency (SymF)** : distance between a vertex's spiral patch and that of
+- **Symmetry consistency (SymF)** — distance between a vertex's spiral patch and that of
   its bilateral mirror, weighted by a global symmetry-confidence term.
-- **Contextual rank (CR)** : the per-mesh empirical CDF of each base feature, giving the
+- **Contextual rank (CR)** — the per-mesh empirical CDF of each base feature, giving the
   model a mesh-global sense of how a vertex ranks.
-- **Topological persistence (Pers)** : the persistence of each vertex under a curvature
+- **Topological persistence (Pers)** — the persistence of each vertex under a curvature
   filtration, capturing topologically significant extrema regardless of local magnitude.
 
 On the Schelling benchmark, GSTF raises PLCC from **0.540 → 0.680** and AUC from
-**0.818 → 0.873** over the spiral-patch baseline ; the highest PLCC among compared
+**0.818 → 0.873** over the spiral-patch baseline — the highest PLCC among compared
 methods — and the gain survives a strict, leakage-free held-out-mesh test.
 
 📄 **Project page:** https://zaineb-ibork.github.io/GSTF-Mesh-Saliency/
+
+This repository holds the code of the **conference paper** (S+SSPR 2026).
+
+## Journal extension (under revision, coming soon)
+
+An extended version of this work is under revision for a journal. It adds:
+
+- evaluation under six named protocols: unseen meshes, unseen categories, training per
+  category, decimated meshes, and the published split of a learned graph network, with
+  paired statistical tests and error measures (MSE, MAE) next to correlation;
+- tests that replace each feature by a simpler signal, to explain where each gain comes from;
+- a comparison with a learned graph neural network on its own test meshes, and the same
+  network trained with our features as input;
+- a refined symmetry feature and plane estimation, a faithful re-implementation of the
+  spiral-patch baseline, a cross-database test on eye-tracking data (SAL3D), and the
+  measured cost on new meshes.
+
+The paper and the code of the extension will be released here after publication.
 
 ## Repository layout
 
