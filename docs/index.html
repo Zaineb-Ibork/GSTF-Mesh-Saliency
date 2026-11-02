@@ -3,40 +3,53 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GSTF — Graph-Structural and Topological Features for 3D Mesh Saliency</title>
+<title>GSTF: Graph-Structural and Topological Features for 3D Mesh Saliency</title>
+<meta name="description" content="Learning-free non-local features for 3D mesh saliency: contextual rank, topological persistence and bilateral symmetry. Conference paper (S+SSPR 2026) and journal extension.">
 <style>
-  :root { --navy:#3a1c5c; --accent:#7a3fb5; --grey:#555; --bg:#fff; --soft:#f4eefb; }
+  :root { --navy:#3a1c5c; --accent:#7a3fb5; --grey:#555; --bg:#fff; --soft:#f4eefb; --line:#ece6f3; }
   * { box-sizing: border-box; }
   body { margin:0; font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
          color:#1a1a1a; line-height:1.6; background:var(--bg); }
-  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  .wrap { max-width:940px; margin:0 auto; padding:0 16px; }
   header { background:linear-gradient(135deg,#2a1245,#7a3fb5); color:#fff;
            padding:48px 0 40px; text-align:center; }
   header h1 { margin:0 0 6px; font-size:1.9rem; line-height:1.25; }
-  header .venue { font-size:1rem; opacity:.9; margin:14px 0 4px; }
   .authors { font-size:1.05rem; margin:10px 0 2px; }
   .affil { font-size:.9rem; opacity:.85; }
-  .links { margin-top:22px; }
-  .links a { display:inline-block; margin:6px; padding:9px 18px; border-radius:6px;
-             background:rgba(255,255,255,.15); color:#fff; text-decoration:none;
-             font-weight:600; border:1px solid rgba(255,255,255,.35); }
-  .links a:hover { background:rgba(255,255,255,.28); }
+  .links { margin-top:22px; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:9px 18px; border-radius:6px;
+         background:rgba(255,255,255,.15); color:#fff; text-decoration:none; font-weight:600;
+         border:1px solid rgba(255,255,255,.35); }
+  a.btn:hover { background:rgba(255,255,255,.28); }
+  .btn.pending { opacity:.75; cursor:not-allowed; }
+  .btn .tag { font-size:.72rem; font-weight:600; padding:1px 7px; border-radius:10px;
+              background:rgba(255,255,255,.22); }
   section { padding:30px 0; border-bottom:1px solid #eee; }
   h2 { color:var(--navy); font-size:1.35rem; margin:0 0 12px; }
-  .teaser img { width:100%; border:1px solid #e3e3e3; border-radius:8px; }
+  h3 { color:var(--accent); font-size:1.05rem; margin:18px 0 6px; }
+  img { max-width:100%; height:auto; display:block; }
+  .fig img { width:100%; border:1px solid #e3e3e3; border-radius:8px; }
   .caption { font-size:.85rem; color:var(--grey); margin-top:8px; }
   .cards { display:flex; gap:16px; flex-wrap:wrap; margin-top:8px; }
   .card { flex:1 1 240px; background:var(--soft); border-radius:8px; padding:16px 18px; }
-  .card h3 { margin:0 0 6px; color:var(--accent); font-size:1.05rem; }
+  .card h3 { margin:0 0 6px; }
   .card p { margin:0; font-size:.93rem; }
-  table { border-collapse:collapse; width:100%; margin-top:6px; font-size:.95rem; }
-  th,td { text-align:left; padding:7px 10px; border-bottom:1px solid #e6e6e6; }
-  th { color:var(--navy); }
-  .hi { background:#d9f0d9; font-weight:700; }
+  .stages { display:flex; gap:14px; flex-wrap:wrap; margin:6px 0 4px; }
+  .stage-pill { flex:1 1 260px; border:1px solid var(--line); border-radius:8px; padding:12px 16px; }
+  .stage-pill b { color:var(--navy); }
+  .stage-pill .when { display:block; font-size:.85rem; color:var(--grey); }
+  .stage-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px; }
+  .stage-num { background:var(--accent); color:#fff; border-radius:50%; width:30px; height:30px;
+               display:inline-flex; align-items:center; justify-content:center; font-weight:700; flex:none; }
+  .status { font-size:.8rem; font-weight:600; padding:2px 10px; border-radius:12px;
+            background:var(--soft); color:var(--accent); }
+  ul.findings { padding-left:20px; margin:6px 0; }
+  ul.findings li { margin:4px 0; }
   pre { background:#1e1030; color:#efe9f7; padding:16px; border-radius:8px;
         overflow-x:auto; font-size:.85rem; }
   footer { padding:26px 0 40px; color:var(--grey); font-size:.85rem; text-align:center; }
   a { color:var(--accent); }
+  @media (max-width:600px) { header h1 { font-size:1.45rem; } header { padding:36px 0 30px; } }
 </style>
 </head>
 <body>
@@ -45,64 +58,115 @@
     <h1>Graph-Structural and Topological Features<br>for 3D Mesh Saliency</h1>
     <div class="authors">Zaineb Ibork &nbsp;·&nbsp; Akihiro Sugimoto</div>
     <div class="affil">National Institute of Informatics, Tokyo, Japan</div>
-    <div class="venue">S+SSPR 2026</div>
     <div class="links">
-      <a href="#">Paper (PDF)</a>
-      <a href="https://github.com/Zaineb-Ibork/GSTF-Mesh-Saliency" target="_blank" rel="noopener">Code</a>
-      <a href="#bibtex">BibTeX</a>
+      <!-- paper links: add the PDF URLs in href when the papers are available -->
+      <a class="btn pending" aria-disabled="true" title="Coming soon">Conference paper (S+SSPR 2026) <span class="tag">soon</span></a>
+      <a class="btn pending" aria-disabled="true" title="Coming soon">Journal paper <span class="tag">soon</span></a>
+      <a class="btn" href="https://github.com/Zaineb-Ibork/GSTF-Mesh-Saliency" target="_blank" rel="noopener">Code</a>
+      <a class="btn" href="#bibtex">BibTeX</a>
     </div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <section class="teaser">
-    <img src="fig_qualitative.png" alt="Qualitative saliency predictions across categories">
-    <div class="caption">Ground-truth saliency (left) vs. our full model's prediction
-      (right) across five Schelling categories. Predictions recover salient
-      protrusions (fingertips, fins, leg tips) across diverse object types.</div>
+  <section class="fig">
+    <img src="results_rotation.gif" alt="Rotating meshes of a human, a dolphin and an airplane: ground-truth saliency above, predicted saliency below" width="756" height="486">
+    <div class="caption">Ground truth (top) and our prediction (bottom) on a human, a dolphin
+      and an airplane. Each mesh is predicted by a model that never saw it in training.
+      Blue is low saliency, red is high.</div>
   </section>
 
   <section>
-    <h2>Abstract</h2>
-    <p>Mesh saliency predicts which vertices of a 3D surface attract human attention.
-    Its core difficulty is that perceptual importance is inherently non-local, yet
-    almost all existing methods rely on purely local differential descriptors and so
-    miss where a point sits within the global shape. We identify three structural
-    properties that current predictors systematically ignore: <b>bilateral symmetry</b>,
-    <b>contextual rank</b>, and <b>topological persistence</b>. All three are
-    learning-free and complement any local descriptor. Added to a strong multi-scale
-    spiral-patch baseline on the Schelling dataset, our descriptor
-    <b>GSTF</b> achieves the highest PLCC among published methods and an AUC
-    competitive with the best. The gain survives a strict held-out-mesh test that
-    prevents vertex-level leakage, and contextual rank provably carries no direct
-    ground-truth signal.</p>
-  </section>
-
-  <section>
-    <h2>Three learning-free feature families</h2>
+    <h2>Overview</h2>
+    <p>Mesh saliency predicts which parts of a 3D surface draw human attention. Most
+    predictors describe each vertex by local, differential features and cannot see cues
+    that depend on the rest of the shape. We add three <b>learning-free</b>, non-local
+    features to a multi-scale spiral-patch descriptor and study when and why they help.</p>
     <div class="cards">
-      <div class="card"><h3>Symmetry (SymF)</h3>
-        <p>Spiral-patch distance to a vertex's bilateral mirror, weighted by a global
-        symmetry-confidence term.</p></div>
       <div class="card"><h3>Contextual rank (CR)</h3>
-        <p>Per-mesh empirical CDF of each base feature — a mesh-global sense of how a
-        vertex ranks.</p></div>
+        <p>Where each feature value of a vertex falls within the distribution of its own
+        mesh.</p></div>
       <div class="card"><h3>Persistence (Pers)</h3>
-        <p>Persistence of each vertex under a curvature filtration, capturing
-        topologically significant extrema.</p></div>
+        <p>How far each curvature extremum stands out from its surroundings, from
+        persistent homology.</p></div>
+      <div class="card"><h3>Symmetry (SymF)</h3>
+        <p>How a vertex's neighbourhood compares with that of its bilateral mirror, and a
+        post-processing step that shares predictions between mirror vertices.</p></div>
+    </div>
+    <div class="fig" style="margin-top:18px">
+      <img src="journal_features.jpg" alt="Feature channels mapped onto a human and a dolphin" width="1800" height="578" loading="lazy">
+      <div class="caption">Ground truth, the three baseline features and the three added
+        features on a human and a dolphin.</div>
     </div>
   </section>
 
   <section>
-    <h2>Results (Schelling, pooled protocol)</h2>
-    <table>
-      <tr><th>Model</th><th>PLCC</th><th>AUC</th></tr>
-      <tr><td>Spiral Regressor (baseline)</td><td>0.557</td><td>0.820</td></tr>
-      <tr class="hi"><td>GSTF (ours, full 24-D)</td><td>0.680</td><td>0.873</td></tr>
-    </table>
-    <div class="caption">Highest PLCC among compared methods; gain confirmed
-      significant under 10-fold cross-validation and a leakage-free held-out-mesh test.</div>
+    <h2>Two stages</h2>
+    <div class="stages">
+      <div class="stage-pill"><b>1. Conference paper</b><span class="when">S+SSPR 2026: the three
+        features and a first evaluation</span></div>
+      <div class="stage-pill"><b>2. Journal extension</b><span class="when">Under revision: an
+        extended evaluation and explanation of the gains</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="stage-head"><span class="stage-num">1</span><h2 style="margin:0">Conference paper</h2>
+      <span class="status">S+SSPR 2026</span></div>
+    <ul class="findings">
+      <li>Introduces the three feature families on top of the spiral-patch baseline, with no
+        change to the regressor.</li>
+      <li>On the Schelling benchmark, the full descriptor gives the highest correlation
+        with the ground truth among published methods.</li>
+      <li>The gain holds on meshes held out from training, and contextual rank is shown to
+        carry no direct information about the ground truth.</li>
+    </ul>
+    <div class="fig" style="margin-top:14px">
+      <img src="fig_qualitative.png" alt="Ground truth and predictions on five Schelling categories (conference paper)" loading="lazy">
+      <div class="caption">Ground truth and prediction on five categories (conference
+        paper).</div>
+    </div>
+    <p>The code in this repository reproduces the conference paper.</p>
+  </section>
+
+  <section>
+    <div class="stage-head"><span class="stage-num">2</span><h2 style="margin:0">Journal extension</h2>
+      <span class="status">Under revision · coming soon</span></div>
+    <h3>What we added</h3>
+    <ul class="findings">
+      <li>Evaluation under six named protocols: unseen meshes, unseen categories, training
+        per category, decimated meshes, and the published split of a learned graph
+        network, with paired statistical tests and error measures next to correlation.</li>
+      <li>Tests that replace each feature by a simpler signal, to find where its gain
+        comes from.</li>
+      <li>A comparison with a learned graph neural network on its own test meshes, and
+        the same network trained with our features as input.</li>
+      <li>A refined symmetry feature and plane estimation, a cross-database test on
+        eye-tracking data, and the measured cost on new meshes.</li>
+    </ul>
+    <h3>What we found</h3>
+    <ul class="findings">
+      <li>Contextual rank and persistence improve the prediction on unseen meshes, unseen
+        categories and decimated meshes.</li>
+      <li>Contextual rank works as a per-mesh normalisation; persistence helps through how
+        prominent each extremum is, not only where it is.</li>
+      <li>Symmetry is most useful as a post-processing step.</li>
+      <li>With the two features, a small regressor outperforms a learned graph network on
+        that network's own test meshes, and the features improve the network as well.</li>
+      <li>They add only a few percent to the cost of the descriptor.</li>
+    </ul>
+    <div class="fig" style="margin-top:14px">
+      <img src="journal_heldout.jpg" alt="Ground truth and held-out predictions on five categories (journal extension)" width="1800" height="864" loading="lazy">
+      <div class="caption">Ground truth (top) and prediction (bottom) on five categories;
+        every mesh is predicted by a model that did not see it.</div>
+    </div>
+    <div class="fig" style="margin-top:18px">
+      <img src="journal_comparison.jpg" alt="Comparison with the baseline and a learned graph network on three unseen meshes" width="1800" height="1087" loading="lazy">
+      <div class="caption">Ground truth, the spiral-patch baseline, a learned graph network
+        and our descriptor on three meshes that no model saw in training.</div>
+    </div>
+    <p>Paper and code for the journal extension: coming soon.</p>
   </section>
 
   <section id="bibtex">
@@ -113,6 +177,7 @@
   booktitle = {Structural, Syntactic, and Statistical Pattern Recognition (S+SSPR)},
   year      = {2026}
 }</pre>
+    <p class="caption">The citation of the journal extension will be added on publication.</p>
   </section>
 
 </div>
